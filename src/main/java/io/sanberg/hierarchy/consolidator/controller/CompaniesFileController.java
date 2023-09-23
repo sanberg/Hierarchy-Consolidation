@@ -1,4 +1,4 @@
-package io.sanberg;
+package io.sanberg.hierarchy.consolidator.controller;
 
 import io.sanberg.hierarchy.consolidator.model.Company;
 import io.sanberg.hierarchy.consolidator.model.CompanyInfo;
@@ -9,15 +9,24 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Stream;
 
+/**
+ * The controller class for processing the file.
+ */
 public class CompaniesFileController {
-    public HashMap<Integer, Company> readFile(LocalDate reportDate) throws FileNotFoundException {
+    /**
+     * Read file hash map.
+     *
+     * @param reportDate the report date
+     * @param path       the path to file
+     * @return hashmap containing map of companies (id, company)
+     * @throws FileNotFoundException the file not found exception
+     */
+    public HashMap<Integer, Company> readFile(LocalDate reportDate, Path path) throws FileNotFoundException {
         HashMap<Integer, Company> companiesMap = new HashMap<>();
-        Path path = Paths.get("src/main/resources/input.csv");
         List<CompanyInfo> companyInfoList;
         try (Stream<String> stream = Files.lines(path)) {
             companyInfoList = stream.filter(s -> !(s.startsWith("ID")))
@@ -30,6 +39,17 @@ public class CompaniesFileController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        processCompanyInfoToMap(companyInfoList, companiesMap);
+        return companiesMap;
+    }
+
+    /**
+     *  converting company info to map of companies.
+     *
+     * @param companyInfoList   list of metadata about the companies
+     * @param companiesMap       hashmap containing map of companies (id, company)
+     */
+    private static void processCompanyInfoToMap(List<CompanyInfo> companyInfoList, HashMap<Integer, Company> companiesMap) {
         companyInfoList.forEach(
             companyInfo -> {
                 Company company = companiesMap.get(companyInfo.getId());
@@ -44,10 +64,5 @@ public class CompaniesFileController {
                 }
             }
         );
-        return companiesMap;
     }
-
-//    private Company updateCompany(Company company, String[] row) {
-//        company.getOwnership().put()
-//    }
 }
