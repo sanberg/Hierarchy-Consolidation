@@ -3,8 +3,7 @@ package io.sanberg.hierarchy.consolidator.model;
 import java.math.BigDecimal;
 import java.util.HashMap;
 
-public class Company {
-    int id;
+public class Company extends HierarchyNode {
     HashMap<Integer, BigDecimal> ownershipMap;
     int ownerId;
 

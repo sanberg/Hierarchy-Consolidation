@@ -9,14 +9,14 @@ import java.time.format.DateTimeFormatter;
 /**
  * The builder for Company info.
  */
-public class CompanyInfoBuilder {
+public class CompanyInfoBuilder implements CSVInfoBuilder {
     /**
      * Build company info from csv line
      *
      * @param row the row
      * @return the company info
      */
-    public static CompanyInfo build(String[] row) {
+    public HierarchyNodeInfo build(String[] row) {
         if (row.length != 5) {
             throw new IllegalArgumentException("row columns count is incorrect");
         }

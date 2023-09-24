@@ -3,23 +3,12 @@ package io.sanberg.hierarchy.consolidator.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * The Company info type for metadata about companies before putting to companies registry
- */
-public class CompanyInfo extends HierarchyNodeInfo {
+public abstract class HierarchyNodeInfo implements Comparable<HierarchyNodeInfo> {
     int id;
     LocalDate beginDate;
     LocalDate endDate;
     BigDecimal percentage;
     int parentId;
-
-    public CompanyInfo(int id, LocalDate beginDate, LocalDate endDate, BigDecimal percentage, int parentId) {
-        this.id = id;
-        this.beginDate = beginDate;
-        this.endDate = endDate;
-        this.percentage = percentage;
-        this.parentId = parentId;
-    }
 
     public int getId() {
         return id;
@@ -59,10 +48,5 @@ public class CompanyInfo extends HierarchyNodeInfo {
 
     public void setParentId(int parentId) {
         this.parentId = parentId;
-    }
-
-    @Override
-    public int compareTo(HierarchyNodeInfo o) {
-        return Integer.compare(this.id, o.getId());
     }
 }

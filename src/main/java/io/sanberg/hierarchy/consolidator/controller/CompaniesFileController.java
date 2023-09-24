@@ -1,8 +1,6 @@
 package io.sanberg.hierarchy.consolidator.controller;
 
-import io.sanberg.hierarchy.consolidator.model.Company;
-import io.sanberg.hierarchy.consolidator.model.CompanyInfo;
-import io.sanberg.hierarchy.consolidator.model.CompanyInfoBuilder;
+import io.sanberg.hierarchy.consolidator.model.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,14 +25,15 @@ public class CompaniesFileController {
      */
     public HashMap<Integer, Company> readFile(LocalDate reportDate, Path path) throws FileNotFoundException {
         HashMap<Integer, Company> companiesMap = new HashMap<>();
-        List<CompanyInfo> companyInfoList;
+        List<HierarchyNodeInfo> companyInfoList;
+        CSVInfoBuilder builder = new CompanyInfoBuilder();
         try (Stream<String> stream = Files.lines(path)) {
             companyInfoList = stream.filter(s -> !(s.startsWith("ID")))
                     .map(s -> s.split(";"))
-                    .map(CompanyInfoBuilder::build)
+                    .map(builder::build)
                     .filter(companyInfo -> companyInfo.getBeginDate().isBefore(reportDate)
                             && companyInfo.getEndDate().isAfter(reportDate))
-                    .sorted(Comparator.comparingInt(CompanyInfo::getId))
+                    .sorted(Comparator.comparingInt(HierarchyNodeInfo::getId))
                     .toList();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -49,7 +48,7 @@ public class CompaniesFileController {
      * @param companyInfoList   list of metadata about the companies
      * @param companiesMap       hashmap containing map of companies (id, company)
      */
-    private static void processCompanyInfoToMap(List<CompanyInfo> companyInfoList, HashMap<Integer, Company> companiesMap) {
+    private static void processCompanyInfoToMap(List<HierarchyNodeInfo> companyInfoList, HashMap<Integer, Company> companiesMap) {
         companyInfoList.forEach(
             companyInfo -> {
                 Company company = companiesMap.get(companyInfo.getId());
